@@ -1,0 +1,73 @@
+<job>
+problem_id  = KHI       # problem ID: basename of output filenames
+
+<mesh>
+nx1         = 512       # Number of zones in X1-direction
+x1min       = 0      # minimum value of X1
+x1max       = 1.0       # maximum value of X1
+ix1_bc      = periodic   # Inner-X1 boundary condition flag
+ox1_bc      = periodic   # Outer-X1 boundary condition flag
+
+nx2         = 512         # Number of zones in X2-direction
+x2min       = 0      # minimum value of X2
+x2max       = 1.0       # maximum value of X2
+ix2_bc      = outflow  # Inner-X2 boundary condition flag
+ox2_bc      = outflow  # Outer-X2 boundary condition flag
+
+nx3         = 1         # Number of zones in X3-direction
+x3min       = 0      # minimum value of X3
+x3max       = 1.0       # maximum value of X3
+ix3_bc      = periodic  # Inner-X3 boundary condition flag
+ox3_bc      = periodic  # Outer-X3 boundary condition flag
+num_threads = 4
+ 
+
+<meshblock>
+nx1 = 128
+nx2 = 128
+nx3 = 1
+
+<hydro>
+gamma=1.4
+riemann=hllc
+
+<time>
+cfl_number = 0.4       # The Courant, Friedrichs, & Lewy (CFL) Number
+nlim       = -1        # cycle limit
+tlim       = 10.0       # time limit
+integrator = vl2       # time integration algorithm
+xorder     = 2         # order of spatial reconstruction
+ncycle_out = 1         # interval for stdout summary info
+
+<output1>
+file_type   = hdf5       # HDF5 .athdf
+variable    = prim        # rho, press, vel*
+dt          = 0.05
+id          = prim
+data_format = %12.5e    # Optional data format string
+
+<output2>
+file_type   = hst       # History data dump
+dt          = 0.1      # time increment between outputs
+data_format = %12.5e    # Optional data format string
+
+<problem>
+rho_lo=1.0
+rho_hi=2.0
+p0=2.5
+vx_lo=-0.5
+vx_hi=+0.5
+
+# --- pick ONE seed kind ---
+seed_kind = velocity     # or: interface
+
+# velocity seed params:
+mode_m   = 2             # number of waves in x across the domain
+A_vy     = 1e-2          # vy amplitude = A_vy * cs_ref
+sigma_y  = 0.03          # envelope width as fraction of Ly
+phase    = 0.0
+
+# interface displacement params (used if seed_kind=interface):
+eta_y    = 0.03         # absolute displacement in y-units (e.g., Ly=1 → 0.005)
+color_lo=0.0      # passive scalar mass fraction below the interface
+color_hi=1.0      # ...above the interface
